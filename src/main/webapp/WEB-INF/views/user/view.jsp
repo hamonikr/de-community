@@ -65,12 +65,12 @@
 					<div class="card-body card-primary card-outline row" style="width: 100%;">
 
 						<div class="col-3 profileLeftDiv">
-							<img alt="profile" src="/img/HamoniKR_logo600.png" class="img" width="100%"><br/>
+							<img alt="profile" src="/upload/${result.userNo}" id="profileImg" class="img" width="100%"><br/>
 							
 							<c:if test="${ isMypage }">
 								<label class="btn btn-primary" >
-									<span>사진변경</span>
-									<input type="file" style="display: none;"><br/>
+									<input id="iptProfileImg" name="profileImg" type="file" onchange="fnProfileImg()" style="display: none;">
+									<span>사진변경</span><br/>
 								</label>
 								<input type="button" id="btnPw" class="btn btn-primary" value="비밀번호 변경"><br/>
 							</c:if>
@@ -261,11 +261,9 @@ function fnUpdatePw(){
 		url			: '/user/modifyPw',
 		data		: $("#frm1").serialize(),
 		type		: 'post',
-		success	: function(req){
-			alert(req.message);
-			if(req.updateVal){
-				location.reload(true);
-			}
+		success	: function(data){
+			alert(data.message);
+			if(data.updateVal) location.reload(true);
 		},
 		error		: function(xhr, status, error){
 			console.log(xhr, status, error);
@@ -273,6 +271,34 @@ function fnUpdatePw(){
 	});
 }
 
+// 사용자 프로필 변경
+function fnProfileImg(){
+	var form = $('<form></form>');
+	var img = $('#iptProfileImg').clone();
+
+	form.attr('method', 'post');
+	form.attr('enctype', 'multipart/form-data');
+	form.append(img);
+
+	var fileData = new FormData($(form)[0]);
+	
+	$.ajax({
+		enctype	: 'multipart/form-data',
+		url			: '/user/upload',
+		data		: fileData,
+		type		: 'post',
+		processData: false, 
+		contentType: false,
+		cache		: false,
+		success	: function(data){
+			alert(data.message);
+			if(data.result) location.reload(true);
+		},
+		error		: function(xhr, status, error){
+			console.log(xhr, status, error);
+		}
+	});
+}
 
 // popup resize
 function fnPopupResize(){
@@ -281,8 +307,19 @@ function fnPopupResize(){
 
 fnPopupResize();
 $(window).resize(function(){
-	fnPopupResize();
+	fnPopupResize();	// 팝업 위치 및 크기 조정
 });
+
+// 프로필 이미지 파일 등록유무 확인
+function isImage(){
+	var img = new Image();
+	img.onload = function(){}
+	img.onerror = function(){
+		$('#profileImg').attr('src', '/img/user_over.png');
+	}
+	img.src = $('#profileImg').attr('src');
+}
+isImage();
 </script>
 </body>
 </html>

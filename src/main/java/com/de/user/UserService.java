@@ -1,5 +1,8 @@
 package com.de.user;
 
+import java.io.File;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -11,6 +14,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.de.newsletteruser.MailingUserRepository;
 import com.de.user.mapper.UserMapper;
@@ -88,6 +93,44 @@ public class UserService {
 				updateVal = true;
 			}
 		}
+		return updateVal;
+	}
+
+	public boolean upload(int userSeq, MultipartHttpServletRequest request) throws Exception {
+		boolean updateVal = false;
+		
+		String root_path = request.getSession().getServletContext().getRealPath("/");
+		String path = root_path.split("/webapp")[0] + "/resources/static/upload/";
+
+		
+		List<MultipartFile> fileList = request.getFiles("profileImg"); 
+		File fileDir = new File(path); 
+		
+		if (!fileDir.exists()) { 
+			fileDir.mkdirs(); 
+		} 
+		long time = System.currentTimeMillis(); 
+		for (MultipartFile mf : fileList) {
+			String originFileName = mf.getOriginalFilename();
+			
+			// 원본 파일명
+			String saveFileName = String.format("%d_%s", time, originFileName);
+			
+			// 파일 확장자명 추출 - 확장자명 없어도 img 태그에서 해당파일을 불러들일 수 있어 제외
+//			Integer mid = saveFileName.lastIndexOf(".");
+//			saveFileName = userSeq + saveFileName.substring(mid, saveFileName.length());
+			
+			saveFileName = String.valueOf(userSeq);
+			
+			try {
+				// 파일생성
+				mf.transferTo(new File(path, saveFileName));
+				updateVal = true;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
 		return updateVal;
 	}
 }
