@@ -1,7 +1,6 @@
 package com.de.user;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import com.de.enterprise.Enterprises;
 import com.de.newsletteruser.MailingUserRepository;
 import com.de.user.mapper.UserMapper;
 
@@ -132,5 +132,10 @@ public class UserService {
 		}
 		
 		return updateVal;
+	}
+
+	public List<Enterprises> getEnterList(String enterName) {
+		List<Enterprises> list = sm.getEnterList(enterName);
+		return list;
 	}
 }

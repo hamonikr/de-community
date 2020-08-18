@@ -65,7 +65,7 @@
 					<div class="card-body card-primary card-outline row" style="width: 100%;">
 
 						<div class="col-3 profileLeftDiv">
-							<img alt="profile" src="/upload/${result.userNo}" id="profileImg" class="img" width="100%"><br/>
+							<img alt="profile" src="/img/user_over.png" id="profileImg" class="img" width="100%"><br/>
 							
 							<c:if test="${ isMypage }">
 								<label class="btn btn-primary" >
@@ -209,6 +209,31 @@ $(function() {
 	$('#btnUpdatePWCancle').on('click', fnPopupPw);
 });
 
+// 회사명 실시간 검색
+var oldEnterName = $('#enterpriseName').val();
+$('#enterpriseName').on("propertychange change keyup paste input", function() {
+	var currentEnterName = $(this).val();
+	if(currentEnterName == oldEnterName) {
+		return;
+	}
+
+	oldEnterName = currentEnterName;
+
+	$.ajax({
+		url		: '/user/getEnterList',
+		data	: { 'enterName' : oldEnterName },
+		type	: 'post',
+		success: function(data){
+			// 선택가능한 목록으로 나오도록 변경필요
+			console.log(data.list);
+		},
+		error		: function(xhr, status, error){
+			console.log(xhr, status, error);
+		}
+	});
+});
+
+
 // 비밀번호 팝업 열기/닫기
 function fnPopupPw(){
 	if('none' == $('#popupPw').css('display')) $('#popupPw').css('display', 'block');
@@ -310,14 +335,15 @@ $(window).resize(function(){
 	fnPopupResize();	// 팝업 위치 및 크기 조정
 });
 
-// 프로필 이미지 파일 등록유무 확인
+// 프로필 이미지 파일 로드
 function isImage(){
+	var imgUrl = '/upload/' + location.href.split('/user/view/')[1];
 	var img = new Image();
-	img.onload = function(){}
-	img.onerror = function(){
-		$('#profileImg').attr('src', '/img/user_over.png');
+	img.onload = function(){
+		$('#profileImg').attr('src', imgUrl);
 	}
-	img.src = $('#profileImg').attr('src');
+	img.onerror = function(){}
+	img.src = imgUrl;
 }
 isImage();
 </script>

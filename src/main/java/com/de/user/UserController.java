@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.de.cmmn.util.CodeMessage;
+import com.de.enterprise.Enterprises;
 
 
 /**
@@ -164,6 +165,12 @@ public class UserController {
 		return map;
 	}
 	
+	/**
+	 * 프로필 이미지 업로드
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
 	@ResponseBody
 	@RequestMapping(value="/upload", method=RequestMethod.POST)
 	public HashMap<String, Object> upload(MultipartHttpServletRequest request) throws Exception{
@@ -182,6 +189,23 @@ public class UserController {
 		else map.put("message", CodeMessage.MSG_000024_변경_중_오류가_발생하였습니다_);
 		
 		map.put("result", updateVal);
+		return map;
+	}
+
+
+	@ResponseBody
+	@RequestMapping(value="/getEnterList", method=RequestMethod.POST)
+	public HashMap<String, Object> getEnterList(String enterName) throws Exception{
+		if(LOG_URL) logger.info(" -- url : /user/getEnterList - enterName : " + enterName);
+		
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		
+		 List<Enterprises> list= service.getEnterList(enterName);
+		
+//		if(updateVal) map.put("message", CodeMessage.MSG_000014_변경_되었습니다_);
+//		else map.put("message", CodeMessage.MSG_000024_변경_중_오류가_발생하였습니다_);
+		
+		map.put("list", list);
 		return map;
 	}
 }

@@ -13,4 +13,15 @@ WHERE
 	user_no = #{userNo}
 </update>
 
+<select id="getEnterList" parameterType="String" resultType="Enterprises">
+SELECT 
+	enterprise_no AS enterpriseNo,
+	enterprise_name AS enterpriseName
+FROM 
+	tb_enterprises
+WHERE
+	 enterprise_at = 1 and
+	 enterprise_name like '%${enterName}%'
+</select>
+
 </mapper>
