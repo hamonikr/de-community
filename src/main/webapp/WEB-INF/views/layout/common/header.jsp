@@ -1,10 +1,27 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ include file="/WEB-INF/views/include/taglibs.jsp"%>
 
 <ul class="navbar-nav">
-      <li class="nav-item">
-        <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
-      </li>
-    </ul>
+  <li class="nav-item">
+    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+  </li>
+</ul>
+
+<!-- 로그인시 메뉴 -->
+<c:if test="${ result != null && result.userNo != null }">
+	<a href="/user/dashboard/${result.userNo}" class="btn btn-primary">
+		<i class="nav-icon far fa-image"></i>
+		내 활동
+	</a>
+</c:if>
+
+<!-- 비로그인시 메뉴 -->
+<c:if test="${ !(result != null && result.userNo != null) }">
+	<a href="/login/login" class="btn btn-primary">
+		<i class="nav-icon far fa-image"></i>
+		로그인
+	</a>
+</c:if>
 
 <!-- SEARCH FORM 
 <form class="form-inline ml-3">

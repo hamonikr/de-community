@@ -32,7 +32,7 @@ public class MailingUserList {
 	private String email;
 	/* 이름 */
 	private String name;
-	/* 활성여부 */
+	/* 활성여부 - Yes 1 // No 0 */
 	private Integer active;
 	
 	/* 등록 일시 */
